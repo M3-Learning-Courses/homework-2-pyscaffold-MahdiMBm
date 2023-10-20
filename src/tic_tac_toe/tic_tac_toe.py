@@ -1,5 +1,5 @@
 import random
-
+import pyfiglet  # Import PyFiglet library
 # Function for the player to select the difficulty level
 def select_difficulty():
     while True:
@@ -144,11 +144,33 @@ def play_game():
             if check_win(board, current_player):
                 print_board(board)
                 print(f"{players[current_player]} wins!")
+                if current_player == "X":                      
+                        text = "You Win!"
+                        font = pyfiglet.Figlet(font='standard')  # You can specify different fonts here
+                        stylized_text = font.renderText(text)
+                        print(stylized_text)
+                else:
+                        text = "You Lose!"
+                        font = pyfiglet.Figlet(font='standard')  # You can specify different fonts here
+                        stylized_text = font.renderText(text)
+                        print(stylized_text)
+                        break
                 break
-
+ 
+                    
             if is_board_full(board):
                 print_board(board)
                 print("It's a tie!")
+                text = "Tie!"
+
+                # Create a FigletFont object with the font you want to use
+                font = pyfiglet.Figlet(font='standard')  # You can specify different fonts here
+
+                # Render the stylized text
+                stylized_text = font.renderText(text)
+
+                # Print the stylized text
+                print(stylized_text)
                 break
 
             if current_player == "O":
@@ -156,6 +178,16 @@ def play_game():
                 if len(empty_cells) == 1:
                     print_board(board)
                     print("Only one move left. It's a tie!")
+                    text = "Tie!"
+
+                    # Create a FigletFont object with the font you want to use
+                    font = pyfiglet.Figlet(font='standard')  # You can specify different fonts here
+
+                    # Render the stylized text
+                    stylized_text = font.renderText(text)
+
+                    # Print the stylized text
+                    print(stylized_text)
                     break
 
             current_player = "O" if current_player == "X" else "X"
