@@ -1,7 +1,12 @@
 import random
-import pyfiglet  # Import PyFiglet library
-# Function for the player to select the difficulty level
+import pyfiglet
+
 def select_difficulty():
+    """Select the difficulty level for the game.
+
+    Returns:
+        str: The selected difficulty level ("1" for Easy or "2" for Hard).
+    """
     while True:
         print("Select the difficulty level:")
         print("1. Easy")
@@ -12,14 +17,26 @@ def select_difficulty():
         else:
             print("Invalid choice. Please enter 1 for Easy or 2 for Hard.")
 
-# Function to print the game board
 def print_board(board):
+    """Print the current game board.
+
+    Args:
+        board (list): A 2D list representing the game board.
+    """
     for row in board:
         print(" | ".join(row))
         print("-" * 9)
 
-# Function to check if a player has won the game
 def check_win(board, player):
+    """Check if a player has won the game.
+
+    Args:
+        board (list): A 2D list representing the game board.
+        player (str): The player's symbol ("X" or "O").
+
+    Returns:
+        bool: True if the player has won, False otherwise.
+    """
     # Check rows and columns for a win
     for row in board:
         if all(cell == player for cell in row):
@@ -35,12 +52,23 @@ def check_win(board, player):
 
     return False
 
-# Function to check if the game board is full (a tie)
 def is_board_full(board):
+    """Check if the game board is full (a tie).
+
+    Args:
+        board (list): A 2D list representing the game board.
+
+    Returns:
+        bool: True if the board is full, False otherwise.
+    """
     return all(cell != " " for row in board for cell in row)
 
-# Function to get the player's move input
 def get_move():
+    """Get the player's move input.
+
+    Returns:
+        int: The selected move (an integer between 1 and 9).
+    """
     while True:
         try:
             move = int(input("Enter your move (1-9): "))
@@ -51,8 +79,16 @@ def get_move():
         except ValueError:
             print("Invalid input. Please enter a number between 1 and 9.")
 
-# Function to analyze the board and find potential wins or blocks for a player
 def analyze_board(board, player):
+    """Analyze the board to find potential wins or blocks for a player.
+
+    Args:
+        board (list): A 2D list representing the game board.
+        player (str): The player's symbol ("X" or "O").
+
+    Returns:
+        tuple: A tuple (row, col) representing a potential move for the player or None if no moves are found.
+    """
     for row in range(3):
         # Check for potential wins or blocks in rows
         if board[row].count(player) == 2 and board[row].count(" ") == 1:
@@ -76,15 +112,34 @@ def analyze_board(board, player):
 
     return None
 
-# Function for the AI to make a move (easy difficulty)
 def ai_move_easy(board):
-    # Randomly select an available move for the AI
-    empty_cells = [(row, col) for row in range(3) for col in range(3) if board[row][col] == " "]
-    return random.choice(empty_cells)
+    """Make a move for the AI in easy difficulty.
 
-# Function for the AI to make a move (hard difficulty)
+    Args:
+        board (list): A 2D list representing the game board.
+
+    Returns:
+        tuple: A tuple (row, col) representing the AI's move.
+    """
+    empty_cells = [(row, col) for row in range(3) for col in range(3) if board[row][col] == " "]
+    if empty_cells:
+        return random.choice(empty_cells)
+    else:
+        return (-1, -1)
+
+
+#
+
+
 def ai_move_hard(board):
-    # Check for potential wins or blocks before making a move
+    """Make a move for the AI in hard difficulty.
+
+    Args:
+        board (list): A 2D list representing the game board.
+
+    Returns:
+        tuple: A tuple (row, col) representing the AI's move.
+    """
     win_move = analyze_board(board, "O")
     block_move = analyze_board(board, "X")
 
@@ -93,7 +148,6 @@ def ai_move_hard(board):
     elif block_move:
         return block_move
     else:
-        # Strategy for hard mode: prioritize center, corners, then edges
         available_moves = [(row, col) for row in range(3) for col in range(3) if board[row][col] == " "]
         center = (1, 1)
         corners = [(0, 0), (0, 2), (2, 0), (2, 2)]
@@ -103,15 +157,22 @@ def ai_move_hard(board):
             if move in available_moves:
                 return move
 
-# Function to play the game
 def play_game():
+    """Play_game, allowing the player to choose the difficulty level.
+
+    The game begins by prompting the player to select a difficulty level, and then it proceeds to alternate
+    between the player and the AI, allowing each to make moves until a win or a tie occurs. The game result
+    is displayed, and the player is given the option to play again.
+
+
+    Returns:
+        result of the game 
+    """
     print("Welcome to Tic-Tac-Toe!")
     difficulty = select_difficulty()
 
     while True:
-        # Randomly select the starting player between "Player" and "AI"
         starting_player = random.choice(["Player", "AI"])
-
         print(f"Starting the game. {starting_player} goes first.")
         board = [[" " for _ in range(3)] for _ in range(3)]
         players = {
@@ -144,32 +205,24 @@ def play_game():
             if check_win(board, current_player):
                 print_board(board)
                 print(f"{players[current_player]} wins!")
-                if current_player == "X":                      
-                        text = "You Win!"
-                        font = pyfiglet.Figlet(font='standard')  # You can specify different fonts here
-                        stylized_text = font.renderText(text)
-                        print(stylized_text)
+                if current_player == "X":
+                    text = "You Win!"
+                    font = pyfiglet.Figlet(font='standard')
+                    stylized_text = font.renderText(text)
+                    print(stylized_text)
                 else:
-                        text = "You Lose!"
-                        font = pyfiglet.Figlet(font='standard')  # You can specify different fonts here
-                        stylized_text = font.renderText(text)
-                        print(stylized_text)
-                        break
+                    text = "You Lose!"
+                    font = pyfiglet.Figlet(font='standard')
+                    stylized_text = font.renderText(text)
+                    print(stylized_text)
                 break
- 
-                    
+
             if is_board_full(board):
                 print_board(board)
                 print("It's a tie!")
                 text = "Tie!"
-
-                # Create a FigletFont object with the font you want to use
-                font = pyfiglet.Figlet(font='standard')  # You can specify different fonts here
-
-                # Render the stylized text
+                font = pyfiglet.Figlet(font='standard')
                 stylized_text = font.renderText(text)
-
-                # Print the stylized text
                 print(stylized_text)
                 break
 
@@ -179,14 +232,8 @@ def play_game():
                     print_board(board)
                     print("Only one move left. It's a tie!")
                     text = "Tie!"
-
-                    # Create a FigletFont object with the font you want to use
-                    font = pyfiglet.Figlet(font='standard')  # You can specify different fonts here
-
-                    # Render the stylized text
+                    font = pyfiglet.Figlet(font='standard')
                     stylized_text = font.renderText(text)
-
-                    # Print the stylized text
                     print(stylized_text)
                     break
 
