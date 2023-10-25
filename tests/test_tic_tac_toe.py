@@ -21,7 +21,6 @@ class TestTicTacToe(unittest.TestCase):
         with patch("builtins.input", side_effect=["2"]):
             result = select_difficulty()
             self.assertEqual(result, "2")
-
     def test_check_win(self):
         board = [
             ["X", "O", "X"],
@@ -56,6 +55,10 @@ class TestTicTacToe(unittest.TestCase):
         with patch("builtins.input", side_effect=["1"]):
             result = get_move()
             self.assertEqual(result, 1)
+    def test_get_move(self):
+        with patch("builtins.input", side_effect=["2"]):
+            result = get_move()
+            self.assertEqual(result, 2)            
 
         with patch("builtins.input", side_effect=["5"]):
             result = get_move()
@@ -87,6 +90,7 @@ class TestTicTacToe(unittest.TestCase):
         ]
         result = ai_move_hard(board)
         self.assertIn(result, [(1, 1), (1, 2), (2, 1)])
+# ... (previous test cases) ...
 
 
 if __name__ == "__main__":
